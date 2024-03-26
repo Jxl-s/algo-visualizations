@@ -24,7 +24,7 @@ export default function Input(props: Props) {
             )}
             <input
                 {...props}
-                className="rounded-lg border border-neutral-400 h-10 ps-4 outline-none w-full disabled:opacity-50"
+                className="rounded-lg border border-neutral-400 h-10 px-4 outline-none w-full disabled:opacity-50"
                 onChange={(e) => props.onChange(e.target.value)}
             />
         </div>

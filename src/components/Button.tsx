@@ -18,7 +18,7 @@ export default function Button(props: PropsWithChildren<Props>) {
             onClick={props.onClick}
             className={`${
                 themes[props.theme ?? "primary"]
-            } w-full duration-300 rounded-lg h-10 shadow-md disabled:opacity-50`}
+            } w-full duration-300 rounded-lg h-10 shadow-md disabled:opacity-50 ${props.className ?? ''}`}
         >
             {props.children}
         </button>

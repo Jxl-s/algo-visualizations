@@ -1,7 +1,7 @@
 import useSearchingStore from "../../stores/useSearchingStore";
-import { Html, OrbitControls, Plane, Stage } from "@react-three/drei";
+import { Html } from "@react-three/drei";
 import * as THREE from "three";
-import { createRef, useEffect, useMemo } from "react";
+import { Ref, RefObject, createRef, useEffect, useMemo } from "react";
 import gsap from "gsap";
 import { useThree } from "@react-three/fiber";
 
@@ -30,7 +30,7 @@ export default function LinearSearch() {
     const stepSpeed = useSearchingStore((state) => state.stepSpeed);
 
     // Initialize boxes and their refs
-    const boxRefs = useMemo(
+    const boxRefs: RefObject<THREE.Group>[] = useMemo(
         () => numberList.split(",").map(() => createRef()),
         [numberList]
     );
@@ -96,8 +96,15 @@ export default function LinearSearch() {
         async function startAnimation() {
             camera.rotation.x = -Math.PI / 4;
             for (let i = 0; i < numberListArray.length; i++) {
+                const showAnimation =
+                    useSearchingStore.getState().showAnimation;
+                if (!showAnimation) return;
+
+                const iBox = boxRefs[i].current;
+                if (!iBox) continue;
+
                 // Focus on the current box
-                const boxPosition = boxRefs[i].current.position;
+                const boxPosition = iBox.position;
                 gsap.to(camera.position, {
                     duration: 1,
                     x: boxPosition.x,
@@ -117,11 +124,13 @@ export default function LinearSearch() {
                     // Destroy them after
                     for (let j = 0; j < numberListArray.length; j++) {
                         if (j === i) continue;
+                        const jBox = boxRefs[j].current;
+                        if (!jBox) continue;
 
-                        const boxPosition = boxRefs[j].current.position;
+                        const boxPosition = jBox.position;
                         const boxOffset = j < i ? -5 : 5;
 
-                        gsap.to(boxRefs[j].current.position, {
+                        gsap.to(jBox.position, {
                             duration: 1,
                             x: boxPosition.x + boxOffset,
                         });
@@ -136,7 +145,7 @@ export default function LinearSearch() {
         }
 
         startAnimation();
-    }, [boxRefs, numberListArray, boxMaterials, toSearch, stepSpeed]);
+    }, [boxRefs, numberListArray, boxMaterials, toSearch, stepSpeed, camera]);
 
     return (
         <>

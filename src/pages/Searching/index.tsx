@@ -6,6 +6,7 @@ import { SearchingAlgorithms } from "../../data/Algorithms";
 import useSearchingStore from "../../stores/useSearchingStore";
 import LinearSearch from "./Linear";
 import { Canvas } from "@react-three/fiber";
+import BinarySearch from "./Binary";
 
 export default function SearchingPage() {
     const numberList = useSearchingStore((state) => state.numberList);
@@ -32,9 +33,7 @@ export default function SearchingPage() {
         );
 
         setNumberList(numbers.join(","));
-        setToSearch(
-            numbers[Math.floor(Math.random() * numbers.length)].toString()
-        );
+        setToSearch(numbers[Math.floor(Math.random() * numbers.length)]);
     }
 
     return (
@@ -51,7 +50,7 @@ export default function SearchingPage() {
                 <div className="col-span-3 lg:col-span-1 grid grid-cols-6 items-end gap-2">
                     <Input
                         className="col-span-3"
-                        label="List (comma separated)"
+                        label="List"
                         placeholder="e.g. 1,2,3,4,5"
                         onChange={setNumberList}
                         value={numberList}
@@ -94,14 +93,18 @@ export default function SearchingPage() {
                 />
                 <div className="col-span-3 lg:col-span-1 grid grid-cols-2 items-end gap-2">
                     <Input
-                        className="col-span-3 lg:col-span-1"
+                        className="col-span-2 lg:col-span-1"
                         label="Step Speed (ms)"
                         type="number"
                         value={stepSpeed.toString()}
                         disabled={showAnimation}
                         onChange={(val) => setStepSpeed(parseInt(val))}
                     />
-                    <Button onClick={() => setShowAnimation(!showAnimation)} theme={showAnimation ? "danger" : "primary"}>
+                    <Button
+                        className="col-span-2 lg:col-span-1"
+                        onClick={() => setShowAnimation(!showAnimation)}
+                        theme={showAnimation ? "danger" : "primary"}
+                    >
                         <span className={`text-white font-semibold`}>
                             {showAnimation
                                 ? "Stop Animation"
@@ -112,7 +115,7 @@ export default function SearchingPage() {
             </div>
             <div className="my-4" />
             {showAnimation && (
-                <div className="w-full h-[600px]">
+                <div className="w-full h-[600px] rounded-lg border border-neutral-400 ">
                     <Canvas
                         camera={{
                             position: [0, 3, 10],
@@ -122,7 +125,12 @@ export default function SearchingPage() {
                             far: 1000,
                         }}
                     >
-                        <LinearSearch />
+                        {algorithm === SearchingAlgorithms.Linear && (
+                            <LinearSearch />
+                        )}
+                        {algorithm === SearchingAlgorithms.Binary && (
+                            <BinarySearch />
+                        )}
                     </Canvas>
                 </div>
             )}
