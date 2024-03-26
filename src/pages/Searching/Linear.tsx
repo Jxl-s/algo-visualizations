@@ -1,7 +1,7 @@
 import useSearchingStore from "../../stores/useSearchingStore";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
-import { Ref, RefObject, createRef, useEffect, useMemo } from "react";
+import { RefObject, createRef, useEffect, useMemo } from "react";
 import gsap from "gsap";
 import { useThree } from "@react-three/fiber";
 
@@ -55,8 +55,8 @@ export default function LinearSearch() {
                     position={[0, -number / 2, 1.5]}
                 >
                     <div className="text-center">
-                        <div>{i}</div>
-                        <div className="text-sm">({number})</div>
+                        <div>{number}</div>
+                        <div>({i})</div>
                     </div>
                 </Html>
             </group>
@@ -67,28 +67,28 @@ export default function LinearSearch() {
         // Do the animation
         function setGreen(material: THREE.MeshStandardMaterial) {
             gsap.to(material.emissive, {
-                duration: 0.5,
+                duration: stepSpeed * 0.001,
                 r: 0.2,
                 g: 0.8,
                 b: 0.2,
             });
 
             gsap.to(material, {
-                duration: 0.5,
+                duration: stepSpeed * 0.001,
                 opacity: 1,
             });
         }
 
         function setRed(material: THREE.MeshStandardMaterial) {
             gsap.to(material.emissive, {
-                duration: 0.5,
+                duration: stepSpeed * 0.001,
                 r: 0.8,
                 g: 0.2,
                 b: 0.2,
             });
 
             gsap.to(material, {
-                duration: 0.5,
+                duration: stepSpeed * 0.001,
                 opacity: 1,
             });
         }
@@ -106,7 +106,7 @@ export default function LinearSearch() {
                 // Focus on the current box
                 const boxPosition = iBox.position;
                 gsap.to(camera.position, {
-                    duration: 1,
+                    duration: stepSpeed * 0.001,
                     x: boxPosition.x,
                     y: 8,
                     z: boxPosition.z + 6,
@@ -114,7 +114,7 @@ export default function LinearSearch() {
 
                 if (numberListArray[i] == toSearch) {
                     setGreen(boxMaterials[i]);
-                    await sleep(1000);
+                    await sleep(stepSpeed);
 
                     // Set the rest to red
                     for (let j = i + 1; j < numberListArray.length; j++) {
@@ -131,7 +131,7 @@ export default function LinearSearch() {
                         const boxOffset = j < i ? -5 : 5;
 
                         gsap.to(jBox.position, {
-                            duration: 1,
+                            duration: stepSpeed * 0.001,
                             x: boxPosition.x + boxOffset,
                         });
                     }

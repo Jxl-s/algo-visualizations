@@ -59,8 +59,8 @@ export default function BinarySearch() {
                     position={[0, -number / 2, 1.5]}
                 >
                     <div className="text-center">
-                        <div>{i}</div>
-                        <div className="text-sm">({number})</div>
+                        <div>{number}</div>
+                        <div>({i})</div>
                     </div>
                 </Html>
             </group>
@@ -71,42 +71,42 @@ export default function BinarySearch() {
         // Do the animation
         function setGreen(material: THREE.MeshStandardMaterial) {
             gsap.to(material.emissive, {
-                duration: 0.5,
+                duration: stepSpeed * 0.001,
                 r: 0.2,
                 g: 0.8,
                 b: 0.2,
             });
 
             gsap.to(material, {
-                duration: 0.5,
+                duration: stepSpeed * 0.001,
                 opacity: 1,
             });
         }
 
         function setBlack(material: THREE.MeshStandardMaterial) {
             gsap.to(material.emissive, {
-                duration: 0.5,
+                duration: stepSpeed * 0.001,
                 r: 0.2,
                 g: 0.2,
                 b: 0.8,
             });
 
             gsap.to(material, {
-                duration: 0.5,
+                duration: stepSpeed * 0.001,
                 opacity: 1,
             });
         }
 
         function setRed(material: THREE.MeshStandardMaterial) {
             gsap.to(material.emissive, {
-                duration: 0.5,
+                duration: stepSpeed * 0.001,
                 r: 0.8,
                 g: 0.2,
                 b: 0.2,
             });
 
             gsap.to(material, {
-                duration: 0.5,
+                duration: stepSpeed * 0.001,
                 opacity: 1,
             });
         }
@@ -135,7 +135,7 @@ export default function BinarySearch() {
 
                 const middleBoxPosition = middleBox.position;
                 gsap.to(camera.position, {
-                    duration: 1,
+                    duration: stepSpeed * 0.001,
                     x: middleBoxPosition.x,
                     y: 8,
                     z: middleBoxPosition.z + 6,
@@ -153,7 +153,7 @@ export default function BinarySearch() {
                         if (!iBox) continue;
 
                         gsap.to(iBox.position, {
-                            duration: 1,
+                            duration: stepSpeed * 0.001,
                             x: iBox.position.x + 5,
                         });
                     }
@@ -169,7 +169,7 @@ export default function BinarySearch() {
                         if (!iBox) continue;
 
                         gsap.to(iBox.position, {
-                            duration: 1,
+                            duration: stepSpeed * 0.001,
                             x: iBox.position.x - 5,
                         });
                     }
@@ -178,7 +178,7 @@ export default function BinarySearch() {
                     middle = Math.floor((left + right) / 2);
                 } else {
                     setGreen(boxMaterials[middle]);
-                    await sleep(1000);
+                    await sleep(stepSpeed);
                     if (!useSearchingStore.getState().showAnimation) return;
 
                     // separate teh others
@@ -193,7 +193,7 @@ export default function BinarySearch() {
 
                         setRed(boxMaterials[i]);
                         gsap.to(iBox.position, {
-                            duration: 1,
+                            duration: stepSpeed * 0.001,
                             x: boxPosition.x + boxOffset,
                         });
                     }
@@ -205,50 +205,6 @@ export default function BinarySearch() {
                 await sleep(stepSpeed);
                 if (!useSearchingStore.getState().showAnimation) return;
             }
-
-            // for (let i = 0; i < numberListArray.length; i++) {
-            //     const iBox = boxRefs[i].current;
-            //     if (!iBox) continue;
-
-            //     // Focus on the current box
-            //     const boxPosition = iBox.position;
-            //     gsap.to(camera.position, {
-            //         duration: 1,
-            //         x: boxPosition.x,
-            //         y: 8,
-            //         z: boxPosition.z + 6,
-            //     });
-
-            //     if (numberListArray[i] == toSearch) {
-            //         setGreen(boxMaterials[i]);
-            //         await sleep(1000);
-
-            //         // Set the rest to red
-            //         for (let j = i + 1; j < numberListArray.length; j++) {
-            //             setRed(boxMaterials[j]);
-            //         }
-
-            //         // Destroy them after
-            //         for (let j = 0; j < numberListArray.length; j++) {
-            //             if (j === i) continue;
-            //             const jBox = boxRefs[j].current;
-            //             if (!jBox) continue;
-
-            //             const boxPosition = jBox.position;
-            //             const boxOffset = j < i ? -5 : 5;
-
-            //             gsap.to(jBox.position, {
-            //                 duration: 1,
-            //                 x: boxPosition.x + boxOffset,
-            //             });
-            //         }
-
-            //         break;
-            //     }
-
-            //     setRed(boxMaterials[i]);
-            //     await sleep(stepSpeed);
-            // }
         }
 
         startAnimation();
