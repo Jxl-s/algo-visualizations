@@ -1,32 +1,31 @@
 import { useRef } from "react";
 
-interface Props {
+interface Props
+    extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
     placeholder?: string;
-    className?: string;
     label?: string;
     onChange: (value: string) => void;
     value: string;
 }
 
-export default function Input({ placeholder, className, label, onChange, value }: Props) {
+export default function Input(props: Props) {
     // Generate an ID for the input element
     const inputRef = useRef();
 
     return (
-        <div className={className}>
-            {label && (
+        <div className={props.className}>
+            {props.label && (
                 <label
                     htmlFor={inputRef.current}
                     className="block font-semibold mb-1"
                 >
-                    {label}
+                    {props.label}
                 </label>
             )}
             <input
-                placeholder={placeholder ?? ""}
-                className="rounded-lg border border-neutral-400 h-10 ps-4 outline-none w-full"
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
+                {...props}
+                className="rounded-lg border border-neutral-400 h-10 ps-4 outline-none w-full disabled:opacity-50"
+                onChange={(e) => props.onChange(e.target.value)}
             />
         </div>
     );

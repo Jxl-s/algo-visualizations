@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-interface Props {
+interface Props extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "onChange">{
     className?: string;
     label?: string;
     onChange: (value: string) => void;
@@ -8,31 +8,26 @@ interface Props {
     options: { display: string; value: string }[];
 }
 
-export default function Select({
-    className,
-    label,
-    onChange,
-    value,
-    options,
-}: Props) {
+export default function Select(props: Props) {
     const inputRef = useRef();
 
     return (
-        <div className={className}>
-            {label && (
+        <div className={props.className}>
+            {props.label && (
                 <label
                     htmlFor={inputRef.current}
                     className="block font-semibold mb-1"
                 >
-                    {label}
+                    {props.label}
                 </label>
             )}
             <select
+                {...props}
                 className="rounded-lg border border-neutral-400 h-10 ps-4 outline-none w-full"
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
+                value={props.value}
+                onChange={(e) => props.onChange(e.target.value)}
             >
-                {options.map((option, i) => (
+                {props.options.map((option, i) => (
                     <option key={i} value={option.value}>
                         {option.display}
                     </option>

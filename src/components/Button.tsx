@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from "react";
+import type { ButtonHTMLAttributes, PropsWithChildren } from "react";
 
 const themes = {
     primary: "bg-blue-600 hover:bg-blue-500",
@@ -6,24 +6,21 @@ const themes = {
     danger: "bg-red-600 hover:bg-red-500",
 } as const;
 
-interface Props {
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
     onClick?: () => void;
     theme?: keyof typeof themes;
 }
 
-export default function Button({
-    onClick,
-    theme,
-    children,
-}: PropsWithChildren<Props>) {
+export default function Button(props: PropsWithChildren<Props>) {
     return (
         <button
-            onClick={onClick}
+            {...props}
+            onClick={props.onClick}
             className={`${
-                themes[theme ?? "primary"]
-            } w-full duration-300 rounded-lg h-10 shadow-md`}
+                themes[props.theme ?? "primary"]
+            } w-full duration-300 rounded-lg h-10 shadow-md disabled:opacity-50`}
         >
-            {children}
+            {props.children}
         </button>
     );
 }
