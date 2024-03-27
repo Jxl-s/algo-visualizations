@@ -15,6 +15,7 @@ import {
     TEXT_OFFSET,
     TEXT_STEP,
 } from "../../data/Animations";
+import { SearchingAlgorithms, getAlgorithm } from "../../data/Algorithms";
 
 const boxMaterial = new THREE.MeshStandardMaterial({
     color: BOX_COLOR,
@@ -34,11 +35,10 @@ export default function LinearSearch() {
     const numberListArray = useMemo(() => {
         const numArray = numberList.split(",").map((n) => parseInt(n));
 
-        // Sorting if it's binary search
-        if (
-            searchAlgorithm === "binary" ||
-            searchAlgorithm === "interpolation"
-        ) {
+        // If Sorting necessary
+        const shouldSort = getAlgorithm(searchAlgorithm).sort;
+
+        if (shouldSort) {
             numArray.sort((a, b) => a - b);
         }
 
@@ -168,13 +168,14 @@ export default function LinearSearch() {
             let right = numberListArray.length - 1;
             let middle = Math.floor((left + right) / 2);
 
+            let i = 0;
             while (left <= right) {
                 const showAnimation =
                     useSearchingStore.getState().showAnimation;
                 if (!showAnimation) return;
 
                 setAnimationStatus(
-                    `Left: ${left}, Middle: ${middle}, Right: ${right}`
+                    `i: ${++i}, Left: ${left}, Middle: ${middle}, Right: ${right}`
                 );
                 setColor(middle, BOX_CURRENT_COLOR);
                 await moveCamera({
@@ -221,6 +222,7 @@ export default function LinearSearch() {
             let low = 0;
             let high = arr.length - 1;
 
+            let i = 0;
             while (low <= high && target >= arr[low] && target <= arr[high]) {
                 const pos = Math.floor(
                     low +
@@ -228,18 +230,20 @@ export default function LinearSearch() {
                             (arr[high] - arr[low])
                 );
 
-                setAnimationStatus(`Left: ${low}, Pos: ${pos}, Right: ${high}`);
+                setAnimationStatus(
+                    `i: ${++i}, Left: ${low}, Pos: ${pos}, Right: ${high}`
+                );
                 const showAnimation =
                     useSearchingStore.getState().showAnimation;
                 if (!showAnimation) return;
+
+                setColor(pos, BOX_CURRENT_COLOR);
 
                 await moveCamera({
                     camera,
                     position: [pos, CAMERA_OFFSET[1], CAMERA_OFFSET[2]],
                     duration: stepSpeed * 0.001,
                 });
-
-                setColor(pos, BOX_CURRENT_COLOR);
 
                 if (arr[pos] === target) {
                     setColor(pos, BOX_FOUND_COLOR);

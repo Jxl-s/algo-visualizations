@@ -1,13 +1,17 @@
+import { binarySearch, linearSearch } from "../algorithms/searching";
+
 export const SearchingAlgorithms = [
     {
         display: "Linear Search",
         name: "linear",
         sort: false,
+        function: linearSearch,
     },
     {
         display: "Binary Search",
         name: "binary",
         sort: true,
+        function: binarySearch,
     },
     {
         display: "Interpolation Search",
@@ -25,6 +29,10 @@ export const SearchingAlgorithms = [
         sort: true,
     },
 ] as const;
+
+export function getAlgorithm(name: TSearchingAlgorithms) {
+    return SearchingAlgorithms.find((algo) => algo.name === name)!;
+}
 
 export type TSearchingAlgorithms = (typeof SearchingAlgorithms)[number]["name"];
 

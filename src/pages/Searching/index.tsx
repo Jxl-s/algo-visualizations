@@ -5,6 +5,7 @@ import Select from "../../components/Select";
 import {
     SearchingAlgorithms,
     TSearchingAlgorithms,
+    getAlgorithm,
 } from "../../data/Algorithms";
 import useSearchingStore from "../../stores/useSearchingStore";
 import { Canvas } from "@react-three/fiber";
@@ -27,11 +28,6 @@ export default function SearchingPage() {
 
     const stepSpeed = useSearchingStore((state) => state.stepSpeed);
     const setStepSpeed = useSearchingStore((state) => state.setStepSpeed);
-
-    // Get the animation component
-    const AnimationComponent = SearchingAlgorithms.find(
-        (algo) => algo.name === algorithm
-    )?.animation;
 
     return (
         <PageLayout>
