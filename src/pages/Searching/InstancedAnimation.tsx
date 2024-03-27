@@ -15,7 +15,7 @@ import {
     TEXT_OFFSET,
     TEXT_STEP,
 } from "../../data/Animations";
-import { SearchingAlgorithms, getAlgorithm } from "../../data/Algorithms";
+import { getAlgorithm } from "../../data/Algorithms";
 
 const boxMaterial = new THREE.MeshStandardMaterial({
     color: BOX_COLOR,
@@ -47,8 +47,6 @@ export default function LinearSearch() {
 
     const numberTarget = useSearchingStore((state) => state.target);
     const stepSpeed = useSearchingStore((state) => state.stepSpeed);
-
-    const setAnimationStatus = useSearchingStore((state) => state.setStatus);
 
     // Initiate the instanced mesh
     const instancedRef = useRef<InstancedMesh>(null);
@@ -129,170 +127,35 @@ export default function LinearSearch() {
             });
         }
 
-        async function startLinearAnimation() {
-            for (let i = 0; i < numberListArray.length; i++) {
-                // If it finished, break the loop
-                const showAnimation =
-                    useSearchingStore.getState().showAnimation;
-                if (!showAnimation) return;
-
-                // Move to the block, then check if it's the target
-                setColor(i, BOX_CURRENT_COLOR);
-                await moveCamera({
-                    camera,
-                    position: [i, CAMERA_OFFSET[1], CAMERA_OFFSET[2]],
-                    duration: stepSpeed * 0.001,
-                });
-
-                setAnimationStatus(`Checking index ${i}...`);
-                if (numberListArray[i] === numberTarget) {
-                    setAnimationStatus(`Found at index ${i}`);
-                    setColor(i, BOX_FOUND_COLOR);
-
-                    // Set the rest to skip
-                    for (let j = i + 1; j < numberListArray.length; j++) {
-                        setColor(j, BOX_SKIP_COLOR);
-                    }
-
-                    break;
-                } else {
-                    setColor(i, BOX_SKIP_COLOR);
-                }
-            }
-        }
-
-        async function startBinaryAnimation() {
-            if (!instancedRef.current) return;
-
-            let left = 0;
-            let right = numberListArray.length - 1;
-            let middle = Math.floor((left + right) / 2);
-
-            let i = 0;
-            while (left <= right) {
-                const showAnimation =
-                    useSearchingStore.getState().showAnimation;
-                if (!showAnimation) return;
-
-                setAnimationStatus(
-                    `i: ${++i}, Left: ${left}, Middle: ${middle}, Right: ${right}`
-                );
-                setColor(middle, BOX_CURRENT_COLOR);
-                await moveCamera({
-                    camera,
-                    position: [middle, CAMERA_OFFSET[1], CAMERA_OFFSET[2]],
-                    duration: stepSpeed * 0.001,
-                });
-
-                if (numberListArray[middle] < numberTarget) {
-                    // All the left side are skipped
-                    for (let i = left; i <= middle; i++) {
-                        setColor(i, BOX_SKIP_COLOR);
-                    }
-
-                    left = middle + 1;
-                    middle = Math.floor((left + right) / 2);
-                } else if (numberListArray[middle] > numberTarget) {
-                    // All the right side are skipped
-                    for (let i = middle; i <= right; i++) {
-                        setColor(i, BOX_SKIP_COLOR);
-                    }
-
-                    right = middle - 1;
-                    middle = Math.floor((left + right) / 2);
-                } else if (numberListArray[middle] === numberTarget) {
-                    // Set the rest to skip
-                    for (let i = left; i <= right; i++) {
-                        if (i === middle) continue;
-                        setColor(i, BOX_SKIP_COLOR);
-                    }
-
-                    setColor(middle, BOX_FOUND_COLOR);
-                    break;
-                }
-
-                await sleep(stepSpeed);
-            }
-        }
-
-        async function startInterpolationAnimation() {
-            const arr = numberListArray;
-            const target = numberTarget;
-
-            let low = 0;
-            let high = arr.length - 1;
-
-            let i = 0;
-            while (low <= high && target >= arr[low] && target <= arr[high]) {
-                const pos = Math.floor(
-                    low +
-                        ((target - arr[low]) * (high - low)) /
-                            (arr[high] - arr[low])
-                );
-
-                setAnimationStatus(
-                    `i: ${++i}, Left: ${low}, Pos: ${pos}, Right: ${high}`
-                );
-                const showAnimation =
-                    useSearchingStore.getState().showAnimation;
-                if (!showAnimation) return;
-
-                setColor(pos, BOX_CURRENT_COLOR);
-
-                await moveCamera({
-                    camera,
-                    position: [pos, CAMERA_OFFSET[1], CAMERA_OFFSET[2]],
-                    duration: stepSpeed * 0.001,
-                });
-
-                if (arr[pos] === target) {
-                    setColor(pos, BOX_FOUND_COLOR);
-                    break;
-                }
-
-                if (arr[pos] < target) {
-                    for (let i = low; i <= pos; i++) {
-                        setColor(i, BOX_SKIP_COLOR);
-                    }
-
-                    low = pos + 1;
-                } else {
-                    for (let i = pos; i < arr.length; i++) {
-                        setColor(i, BOX_SKIP_COLOR);
-                    }
-
-                    high = pos - 1;
-                }
-
-                await sleep(stepSpeed);
-            }
-        }
-
         // Adjust the camera
         camera.rotation.x = CAMERA_ROTATION[0];
         camera.rotation.y = CAMERA_ROTATION[1];
         camera.rotation.z = CAMERA_ROTATION[2];
 
         // Start animation
-        switch (searchAlgorithm) {
-            case "linear":
-                startLinearAnimation();
-                break;
-            case "binary":
-                startBinaryAnimation();
-                break;
-            case "interpolation":
-                startInterpolationAnimation();
-                break;
-        }
-    }, [
-        camera,
-        numberListArray,
-        numberTarget,
-        stepSpeed,
-        searchAlgorithm,
-        setAnimationStatus,
-    ]);
+        getAlgorithm(searchAlgorithm).function(numberListArray, numberTarget, {
+            async eliminate(range) {
+                for (let i = range[0]; i <= (range[1] ?? range[0]); i++) {
+                    setColor(i, BOX_SKIP_COLOR);
+                }
+            },
+            async found(i) {
+                setColor(i, BOX_FOUND_COLOR);
+            },
+            async iteration(i) {
+                // await sleep(stepSpeed);
+                setColor(i, BOX_CURRENT_COLOR);
+                await moveCamera({
+                    camera,
+                    position: [i, CAMERA_OFFSET[1], CAMERA_OFFSET[2]],
+                    duration: stepSpeed * 0.001,
+                });
+            },
+            async reset(i) {
+                setColor(i, BOX_COLOR);
+            },
+        });
+    }, [camera, numberListArray, numberTarget, searchAlgorithm, stepSpeed]);
 
     return (
         <>

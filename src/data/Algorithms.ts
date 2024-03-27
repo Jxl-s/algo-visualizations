@@ -1,4 +1,8 @@
-import { binarySearch, linearSearch } from "../algorithms/searching";
+import {
+    binarySearch,
+    interpolationSearch,
+    linearSearch,
+} from "../algorithms/searching";
 
 export const SearchingAlgorithms = [
     {
@@ -17,16 +21,7 @@ export const SearchingAlgorithms = [
         display: "Interpolation Search",
         name: "interpolation",
         sort: true,
-    },
-    {
-        display: "Jump Search",
-        name: "jump",
-        sort: true,
-    },
-    {
-        display: "Exponential Search",
-        name: "exponential",
-        sort: true,
+        function: interpolationSearch,
     },
 ] as const;
 

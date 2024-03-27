@@ -1,5 +1,6 @@
 interface Callbacks {
-    iteration: (i: number, other?: number[]) => void;
-    found: (i: number) => void;
-    eliminate: (range: number[]) => void;
+    iteration: (i: number, other?: number[]) => Promise<void>;
+    found: (i: number) => Promise<void>;
+    eliminate: (range: number[]) => Promise<void>;
+    reset: (i: number) => Promise<void>;
 }

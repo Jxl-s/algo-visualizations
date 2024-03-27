@@ -1,4 +1,4 @@
-export default function binarySearch(
+export default async function binarySearch(
     arr: number[],
     target: number,
     callbacks: Callbacks
@@ -8,18 +8,18 @@ export default function binarySearch(
 
     while (low <= high) {
         const mid = Math.floor((low + high) / 2);
-        callbacks.iteration(mid, [low, high]);
+        await callbacks.iteration(mid, [low, high]);
 
         if (arr[mid] === target) {
-            callbacks.found(mid);
+            await callbacks.found(mid);
             return mid;
         }
 
         if (arr[mid] < target) {
-            callbacks.eliminate([low, mid]);
+            await callbacks.eliminate([low, mid]);
             low = mid + 1;
         } else {
-            callbacks.eliminate([mid, high]);
+            await callbacks.eliminate([mid, high]);
             high = mid - 1;
         }
     }
