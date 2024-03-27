@@ -5,7 +5,6 @@ import Select from "../../components/Select";
 import {
     SearchingAlgorithms,
     TSearchingAlgorithms,
-    getAlgorithm,
 } from "../../data/Algorithms";
 import useSearchingStore from "../../stores/useSearchingStore";
 import { Canvas } from "@react-three/fiber";

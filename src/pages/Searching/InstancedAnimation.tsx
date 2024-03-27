@@ -73,9 +73,9 @@ export default function LinearSearch() {
     // Start the animation
     useEffect(() => {
         // TODO: Place these in a common folder
-        async function sleep(ms: number) {
-            return new Promise((resolve) => setTimeout(resolve, ms));
-        }
+        // async function sleep(ms: number) {
+        //     return new Promise((resolve) => setTimeout(resolve, ms));
+        // }
 
         type MoveCameraArgs = {
             camera: THREE.Camera;
