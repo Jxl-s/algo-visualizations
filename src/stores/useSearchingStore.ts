@@ -1,38 +1,44 @@
 import { create } from "zustand";
-import { SearchingAlgorithms } from "../data/Algorithms";
+import { TSearchingAlgorithms } from "../data/Algorithms";
 
 interface SearchingStore {
     numberList: string;
     setNumberList: (numberList: string) => void;
 
-    toSearch: number;
-    setToSearch: (toSearch: number) => void;
+    target: number;
+    setTarget: (target: number) => void;
 
-    algorithm: SearchingAlgorithms;
-    setAlgorithm: (algorithm: SearchingAlgorithms) => void;
+    algorithm: TSearchingAlgorithms;
+    setAlgorithm: (algorithm: TSearchingAlgorithms) => void;
 
     showAnimation: boolean;
     setShowAnimation: (showAnimation: boolean) => void;
 
     stepSpeed: number;
     setStepSpeed: (stepSpeed: number) => void;
+
+    status: string;
+    setStatus: (status: string) => void;
 }
 
 const useSearchingStore = create<SearchingStore>((set) => ({
     numberList: "",
-    setNumberList: (numberList: string) => set({ numberList }),
+    setNumberList: (numberList) => set({ numberList }),
 
-    toSearch: -1,
-    setToSearch: (toSearch: number) => set({ toSearch }),
-    
-    algorithm: SearchingAlgorithms.Linear,
-    setAlgorithm: (algorithm: SearchingAlgorithms) => set({ algorithm }),
+    target: 0,
+    setTarget: (target) => set({ target }),
+
+    algorithm: "linear",
+    setAlgorithm: (algorithm) => set({ algorithm }),
 
     showAnimation: false,
-    setShowAnimation: (showAnimation: boolean) => set({ showAnimation }),
+    setShowAnimation: (showAnimation) => set({ showAnimation }),
 
     stepSpeed: 1000,
-    setStepSpeed: (stepSpeed: number) => set({ stepSpeed }),
+    setStepSpeed: (stepSpeed) => set({ stepSpeed }),
+
+    status: "",
+    setStatus: (status) => set({ status }),
 }));
 
 export default useSearchingStore;
