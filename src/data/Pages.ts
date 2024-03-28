@@ -5,17 +5,17 @@ import SortingPage from "../pages/Sorting";
 export const Pages = [
     {
         name: "Searching",
-        href: "/searching",
+        href: "searching",
         component: SearchingPage,
     },
     {
         name: "Sorting",
-        href: "/sorting",
+        href: "sorting",
         component: SortingPage,
     },
     {
         name: "Pathfinding",
-        href: "/pathfinding",
+        href: "pathfinding",
         component: PathfindingPage,
     }
 ] as const;

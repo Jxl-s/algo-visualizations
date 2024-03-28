@@ -1,16 +1,15 @@
 import { PropsWithChildren } from "react";
 import { Pages, getActivePage } from "../data/Pages";
-import { Link } from "react-router-dom";
 import Button from "../components/Button";
+import Link from "../components/Link";
 
 interface Props {}
-
 export default function PageLayout({ children }: PropsWithChildren<Props>) {
     return (
         <div className="p-10">
             <header>
-                <Link to="/">
-                    <h1 className="text-4xl font-bold text-center">
+                <Link to="home">
+                    <h1 className="text-4xl font-bold text-center cursor-pointer">
                         Algorithm Visualizations
                     </h1>
                 </Link>
@@ -19,10 +18,7 @@ export default function PageLayout({ children }: PropsWithChildren<Props>) {
 
                 <ul className={`text-center grid grid-cols-3 gap-4`}>
                     {Pages.map((item, i) => (
-                        <li
-                            key={i}
-                            className={`col-span-3 md:col-span-1`}
-                        >
+                        <li key={i} className={`col-span-3 md:col-span-1`}>
                             <Link to={item.href}>
                                 <Button
                                     theme={
