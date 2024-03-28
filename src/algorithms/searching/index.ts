@@ -1,4 +1,5 @@
-export { default as linearSearch } from "./linear";
-export { default as binarySearch } from "./binary";
-export { default as ternarySearch } from "./ternary";
-export { default as interpolationSearch } from "./interpolation";
+export * as LinearSearch from "./linear";
+export * as BinarySearch from "./binary";
+export * as TernarySearch from "./ternary";
+export * as InterpolationSearch from "./interpolation";
+export * as JumpSearch from "./jump";

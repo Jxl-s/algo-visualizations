@@ -15,7 +15,7 @@ import {
     TEXT_OFFSET,
     TEXT_STEP,
 } from "../../data/Animations";
-import { getAlgorithm } from "../../data/Algorithms";
+import * as SearchingAlgorithms from "../../algorithms/searching";
 
 const boxMaterial = new THREE.MeshStandardMaterial({
     color: BOX_COLOR,
@@ -25,7 +25,7 @@ const boxMaterial = new THREE.MeshStandardMaterial({
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
-export default function LinearSearch() {
+export default function InstancedAnimation() {
     const camera = useThree((state) => state.camera);
 
     const searchAlgorithm = useSearchingStore((state) => state.algorithm);
@@ -36,7 +36,7 @@ export default function LinearSearch() {
         const numArray = numberList.split(",").map((n) => parseInt(n));
 
         // If Sorting necessary
-        const shouldSort = getAlgorithm(searchAlgorithm).sort;
+        const shouldSort = SearchingAlgorithms[searchAlgorithm].SORT;
 
         if (shouldSort) {
             numArray.sort((a, b) => a - b);
@@ -133,7 +133,7 @@ export default function LinearSearch() {
         camera.rotation.z = CAMERA_ROTATION[2];
 
         // Start animation
-        getAlgorithm(searchAlgorithm).function(numberListArray, numberTarget, {
+        SearchingAlgorithms[searchAlgorithm].search(numberListArray, numberTarget, {
             async eliminate(range) {
                 for (let i = range[0]; i <= (range[1] ?? range[0]); i++) {
                     setColor(i, BOX_SKIP_COLOR);

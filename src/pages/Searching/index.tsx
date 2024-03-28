@@ -2,14 +2,12 @@ import Button from "../../components/Button";
 import Input from "../../components/Input";
 import PageLayout from "../../layouts/PageLayout";
 import Select from "../../components/Select";
-import {
-    SearchingAlgorithms,
-    TSearchingAlgorithms,
-} from "../../data/Algorithms";
 import useSearchingStore from "../../stores/useSearchingStore";
 import { Canvas } from "@react-three/fiber";
 import ArrayInput from "../../components/array/ArrayInput";
-import LinearSearch from "./InstancedAnimation";
+import InstancedAnimation from "./InstancedAnimation";
+import * as SearchingAlgorithms from "../../algorithms/searching";
+
 export default function SearchingPage() {
     // Load from the store
     const setNumberList = useSearchingStore((state) => state.setNumberList);
@@ -50,13 +48,15 @@ export default function SearchingPage() {
                     value={algorithm}
                     label="Algorithm"
                     onChange={(value) =>
-                        setAlgorithm(value as TSearchingAlgorithms)
+                        setAlgorithm(value as keyof typeof SearchingAlgorithms)
                     }
                     disabled={showAnimation}
-                    options={SearchingAlgorithms.map((algo) => ({
-                        display: algo.display,
-                        value: algo.name,
-                    }))}
+                    options={Object.entries(SearchingAlgorithms).map(
+                        ([k, v]) => ({
+                            display: v.DISPLAY_NAME,
+                            value: k,
+                        })
+                    )}
                 />
                 <div className="col-span-3 lg:col-span-1 grid grid-cols-2 items-end gap-2">
                     <Input
@@ -94,8 +94,7 @@ export default function SearchingPage() {
                                 far: 1000,
                             }}
                         >
-                            {/* {AnimationComponent && <AnimationComponent />} */}
-                            <LinearSearch />
+                            <InstancedAnimation />
                         </Canvas>
                     </div>
                 </>

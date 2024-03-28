@@ -1,4 +1,8 @@
-export default async function binarySearch(
+export const DISPLAY_NAME = "Binary Search";
+export const NAME = "binary";
+export const SORT = true;
+
+export async function search(
     arr: number[],
     target: number,
     callbacks: Callbacks

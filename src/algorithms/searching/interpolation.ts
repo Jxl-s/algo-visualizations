@@ -1,4 +1,8 @@
-export default async function interpolationSearch(
+export const DISPLAY_NAME = "Interpolation Search";
+export const NAME = "interpolation";
+export const SORT = true;
+
+export async function search(
     arr: number[],
     target: number,
     callbacks: Callbacks

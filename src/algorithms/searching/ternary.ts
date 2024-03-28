@@ -1,4 +1,8 @@
-export default async function ternarySearch(
+export const DISPLAY_NAME = "Ternary Search";
+export const NAME = "ternary";
+export const SORT = true;
+
+export async function search(
     arr: number[],
     target: number,
     callbacks: Callbacks

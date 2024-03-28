@@ -1,4 +1,8 @@
-export default async function linearSearch(
+export const DISPLAY_NAME = "Linear Search";
+export const NAME = "linear";
+export const SORT = false;
+
+export async function search(
     arr: number[],
     target: number,
     callbacks: Callbacks

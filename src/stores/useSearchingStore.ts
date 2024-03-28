@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import { TSearchingAlgorithms } from "../data/Algorithms";
+import * as SearchingAlgorithms from "../algorithms/searching";
 
+type TSearchingAlgorithms = keyof typeof SearchingAlgorithms;
 interface SearchingStore {
     numberList: string;
     setNumberList: (numberList: string) => void;
@@ -28,7 +29,7 @@ const useSearchingStore = create<SearchingStore>((set) => ({
     target: 0,
     setTarget: (target) => set({ target }),
 
-    algorithm: "linear",
+    algorithm: "LinearSearch",
     setAlgorithm: (algorithm) => set({ algorithm }),
 
     showAnimation: false,
