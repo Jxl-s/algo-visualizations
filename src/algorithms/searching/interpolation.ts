@@ -13,8 +13,8 @@ export default async function interpolationSearch(
 
         await callbacks.iteration(low);
         await callbacks.iteration(high);
-
         await callbacks.iteration(pos, [low, high]);
+
         if (arr[pos] === target) {
             await callbacks.found(pos);
             return pos;

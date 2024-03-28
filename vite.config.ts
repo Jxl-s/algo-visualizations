@@ -7,4 +7,14 @@ export default defineConfig({
     server: {
         host: true,
     },
+    build: {
+        rollupOptions: {
+            external: ["react", "react-router", "react-router-dom"],
+            output: {
+                globals: {
+                    react: "React",
+                },
+            },
+        },
+    },
 });

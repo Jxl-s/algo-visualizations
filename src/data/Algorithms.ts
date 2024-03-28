@@ -2,6 +2,7 @@ import {
     binarySearch,
     interpolationSearch,
     linearSearch,
+    ternarySearch,
 } from "../algorithms/searching";
 
 export const SearchingAlgorithms = [
@@ -16,6 +17,12 @@ export const SearchingAlgorithms = [
         name: "binary",
         sort: true,
         function: binarySearch,
+    },
+    {
+        display: "Ternary Search",
+        name: "ternary",
+        sort: true,
+        function: ternarySearch,
     },
     {
         display: "Interpolation Search",

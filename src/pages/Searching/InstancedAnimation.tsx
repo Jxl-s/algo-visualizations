@@ -73,9 +73,9 @@ export default function LinearSearch() {
     // Start the animation
     useEffect(() => {
         // TODO: Place these in a common folder
-        // async function sleep(ms: number) {
-        //     return new Promise((resolve) => setTimeout(resolve, ms));
-        // }
+        async function sleep(ms: number) {
+            return new Promise((resolve) => setTimeout(resolve, ms));
+        }
 
         type MoveCameraArgs = {
             camera: THREE.Camera;
@@ -138,9 +138,16 @@ export default function LinearSearch() {
                 for (let i = range[0]; i <= (range[1] ?? range[0]); i++) {
                     setColor(i, BOX_SKIP_COLOR);
                 }
+
+                await sleep(stepSpeed);
             },
             async found(i) {
                 setColor(i, BOX_FOUND_COLOR);
+                moveCamera({
+                    camera,
+                    position: [i, CAMERA_OFFSET[1], CAMERA_OFFSET[2]],
+                    duration: stepSpeed * 0.001,
+                });
             },
             async iteration(i) {
                 // await sleep(stepSpeed);
@@ -150,6 +157,7 @@ export default function LinearSearch() {
                     position: [i, CAMERA_OFFSET[1], CAMERA_OFFSET[2]],
                     duration: stepSpeed * 0.001,
                 });
+                await sleep(stepSpeed);
             },
             async reset(i) {
                 setColor(i, BOX_COLOR);
