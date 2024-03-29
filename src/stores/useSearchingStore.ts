@@ -35,7 +35,7 @@ const useSearchingStore = create<SearchingStore>((set) => ({
     showAnimation: false,
     setShowAnimation: (showAnimation) => set({ showAnimation }),
 
-    stepSpeed: 1000,
+    stepSpeed: 500,
     setStepSpeed: (stepSpeed) => set({ stepSpeed }),
 
     status: "",
