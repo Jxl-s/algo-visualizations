@@ -22,6 +22,6 @@ export const Pages = [
 
 export const getActivePage = () => {
     // Look at the current URL
-    const path = window.location.pathname;
-    return Pages.find((page) => page.href === path);
+    const params = new URLSearchParams(window.location.search);
+    return Pages.find((page) => page.href === params.get("page"));
 };
