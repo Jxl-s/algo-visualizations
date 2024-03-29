@@ -2,8 +2,16 @@ export const DISPLAY_NAME = "Exponential Search";
 export const NAME = "exponential";
 export const SORT = true;
 
-async function binarySearch(arr: number[], left: number, right: number, x: number, callbacks: Callbacks) {
+async function binarySearch(
+    arr: number[],
+    left: number,
+    right: number,
+    x: number,
+    callbacks: Callbacks
+) {
     while (left <= right) {
+        if (callbacks.stop) return;
+
         const mid = Math.floor(left + (right - left) / 2);
 
         // Check if x is present at mid
@@ -29,12 +37,16 @@ async function binarySearch(arr: number[], left: number, right: number, x: numbe
     return -1;
 }
 
-export async function search(arr: number[], target: number, callbacks: Callbacks) {
+export async function search(
+    arr: number[],
+    target: number,
+    callbacks: Callbacks
+) {
     const n = arr.length;
 
     // If the element is present at the first position itself
     await callbacks.iteration(0);
-    await callbacks.reset(0);
+    
     if (arr[0] === target) {
         await callbacks.found(0);
         return 0;
@@ -45,11 +57,19 @@ export async function search(arr: number[], target: number, callbacks: Callbacks
     // Find the range for binary search by repeated doubling
     let i = 1;
     while (i < n && arr[i] <= target) {
+        if (callbacks.stop) return;
+
         await callbacks.iteration(i);
         await callbacks.eliminate([Math.floor(i / 2), i]);
         i *= 2;
     }
 
     // Perform binary search in the found range
-    return binarySearch(arr, Math.floor(i / 2), Math.min(i, n - 1), target, callbacks);
+    return binarySearch(
+        arr,
+        Math.floor(i / 2),
+        Math.min(i, n - 1),
+        target,
+        callbacks
+    );
 }

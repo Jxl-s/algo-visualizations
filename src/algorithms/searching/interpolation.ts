@@ -11,6 +11,8 @@ export async function search(
     let high = arr.length - 1;
 
     while (low <= high && target >= arr[low] && target <= arr[high]) {
+        if (callbacks.stop) return;
+
         const pos = Math.floor(
             low + ((target - arr[low]) * (high - low)) / (arr[high] - arr[low])
         );

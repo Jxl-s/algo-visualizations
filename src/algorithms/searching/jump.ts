@@ -14,16 +14,21 @@ export async function search(
 
     // Finding the block where the element may be present
     while (current < n && arr[current] < target) {
+        if (callbacks.stop) return;
+
         await callbacks.iteration(current);
-        await callbacks.reset(current);
         await callbacks.eliminate([prev, current - 1]);
 
         prev = current;
         current += jumpSize;
+
+        await callbacks.reset(prev);
     }
 
     // Performing a linear search in the found block
     for (let i = prev; i < Math.min(current, n); i++) {
+        if (callbacks.stop) return;
+
         await callbacks.iteration(i);
         if (arr[i] === target) {
             await callbacks.found(i);

@@ -11,6 +11,8 @@ export async function search(
     let high = arr.length - 1;
 
     while (low <= high) {
+        if (callbacks.stop) return;
+
         const mid = Math.floor((low + high) / 2);
         await callbacks.iteration(mid, [low, high]);
 

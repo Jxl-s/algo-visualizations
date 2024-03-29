@@ -133,8 +133,13 @@ export default function InstancedAnimation() {
         camera.rotation.z = CAMERA_ROTATION[2];
 
         // Start animation
-        SearchingAlgorithms[searchAlgorithm].search(numberListArray, numberTarget, {
+        const animationCallbacks: Callbacks = {
             async eliminate(range) {
+                if (!useSearchingStore.getState().showAnimation) {
+                    this.stop = true;
+                    return;
+                }
+
                 for (let i = range[0]; i <= (range[1] ?? range[0]); i++) {
                     setColor(i, BOX_SKIP_COLOR);
                 }
@@ -142,6 +147,11 @@ export default function InstancedAnimation() {
                 await sleep(stepSpeed);
             },
             async found(i) {
+                if (!useSearchingStore.getState().showAnimation) {
+                    this.stop = true;
+                    return;
+                }
+
                 setColor(i, BOX_FOUND_COLOR);
                 moveCamera({
                     camera,
@@ -150,6 +160,12 @@ export default function InstancedAnimation() {
                 });
             },
             async iteration(i) {
+                console.log(i);
+                if (!useSearchingStore.getState().showAnimation) {
+                    this.stop = true;
+                    return;
+                }
+
                 // await sleep(stepSpeed);
                 setColor(i, BOX_CURRENT_COLOR);
                 await moveCamera({
@@ -160,9 +176,21 @@ export default function InstancedAnimation() {
                 await sleep(stepSpeed);
             },
             async reset(i) {
+                if (!useSearchingStore.getState().showAnimation) {
+                    this.stop = true;
+                    return;
+                }
+
                 setColor(i, BOX_COLOR);
             },
-        });
+            stop: false,
+        } as Callbacks;
+
+        SearchingAlgorithms[searchAlgorithm].search(
+            numberListArray,
+            numberTarget,
+            animationCallbacks
+        );
     }, [camera, numberListArray, numberTarget, searchAlgorithm, stepSpeed]);
 
     return (
