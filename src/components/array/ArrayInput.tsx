@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Button from "../Button";
 import Input from "../Input";
 import useOutsideAlerter from "../../hooks/useOutsideAlerter";
+import { isNumber, isNumberCsv } from "../../validators";
 
 type ArrayInputEvent = {
     list: string;
@@ -31,18 +32,8 @@ export default function ArrayInput({ onChange, disabled }: Props) {
         count: 10,
     });
 
-    // Input validation (on deselect)
-    const validateArrayInput = (v: string) => {
-        const arr = v.split(",").map((v) => parseInt(v));
-        return !arr.some((v) => isNaN(v));
-    };
-
-    const validateTargetInput = (v: string) => {
-        return !isNaN(parseInt(v));
-    };
-
     const onArrayChange = (v: string) => {
-        if (!validateArrayInput(v)) {
+        if (!isNumberCsv(v)) {
             setArrayInput((s) => ({ ...s, error: "Invalid array" }));
         } else {
             setArrayInput((s) => ({ ...s, error: "" }));
@@ -50,7 +41,7 @@ export default function ArrayInput({ onChange, disabled }: Props) {
     };
 
     const onTargetChange = (v: string) => {
-        if (!validateTargetInput(v)) {
+        if (!isNumber(v)) {
             setTargetInput((s) => ({ ...s, error: "Invalid number" }));
         } else {
             setTargetInput((s) => ({ ...s, error: "" }));

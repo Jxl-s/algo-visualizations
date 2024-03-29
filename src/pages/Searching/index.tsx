@@ -7,8 +7,13 @@ import { Canvas } from "@react-three/fiber";
 import ArrayInput from "../../components/array/ArrayInput";
 import InstancedAnimation from "./InstancedAnimation";
 import * as SearchingAlgorithms from "../../algorithms/searching";
+import { isNumber, isNumberCsv } from "../../validators";
+import { useState } from "react";
 
 export default function SearchingPage() {
+    // manage the button state
+    const [buttonEnabled, setButtonEnabled] = useState(true);
+
     // Load from the store
     const setNumberList = useSearchingStore((state) => state.setNumberList);
     const setTarget = useSearchingStore((state) => state.setTarget);
@@ -38,6 +43,13 @@ export default function SearchingPage() {
             <div className="grid grid-cols-3 gap-4">
                 <ArrayInput
                     onChange={(e) => {
+                        // Enable number if it's valid
+                        if (isNumberCsv(e.list) && isNumber(e.target)) {
+                            setButtonEnabled(true);
+                        } else {
+                            setButtonEnabled(false);
+                        }
+
                         setNumberList(e.list);
                         setTarget(parseInt(e.target));
                     }}
@@ -71,6 +83,7 @@ export default function SearchingPage() {
                         className="col-span-2 lg:col-span-1"
                         onClick={() => setShowAnimation(!showAnimation)}
                         theme={showAnimation ? "danger" : "primary"}
+                        disabled={!buttonEnabled}
                     >
                         <span className={`text-white font-semibold`}>
                             {showAnimation
