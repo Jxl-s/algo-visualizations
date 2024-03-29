@@ -34,15 +34,19 @@ export async function search(arr: number[], target: number, callbacks: Callbacks
 
     // If the element is present at the first position itself
     await callbacks.iteration(0);
+    await callbacks.reset(0);
     if (arr[0] === target) {
         await callbacks.found(0);
         return 0;
+    } else {
+        await callbacks.eliminate([0]);
     }
 
     // Find the range for binary search by repeated doubling
     let i = 1;
     while (i < n && arr[i] <= target) {
         await callbacks.iteration(i);
+        await callbacks.eliminate([Math.floor(i / 2), i]);
         i *= 2;
     }
 
