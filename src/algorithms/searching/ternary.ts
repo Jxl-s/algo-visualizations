@@ -20,6 +20,9 @@ export async function search(
         await callbacks.iteration(mid1);
         await callbacks.iteration(mid2);
 
+        await callbacks.reset(mid1);
+        await callbacks.reset(mid2);
+
         if (arr[mid1] === target) {
             await callbacks.found(mid1);
             return mid1;
@@ -38,9 +41,6 @@ export async function search(
             left = mid1 + 1;
             right = mid2 - 1;
         }
-
-        await callbacks.reset(mid1);
-        await callbacks.reset(mid2);
     }
 
     return -1;
