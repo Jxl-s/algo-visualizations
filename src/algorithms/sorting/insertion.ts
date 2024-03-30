@@ -13,9 +13,9 @@ export async function sort(arr: number[], callbacks: SortCallbacks) {
         while (j >= 0 && arr[j] > key) {
             await callbacks.iteration(j);
             await callbacks.swap(j, j + 1);
+            await callbacks.reset(j + 1);
             arr[j + 1] = arr[j];
             j = j - 1;
-            await callbacks.reset(j + 1);
         }
 
         arr[j + 1] = key;

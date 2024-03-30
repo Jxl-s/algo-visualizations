@@ -147,6 +147,7 @@ export default function Animation() {
             },
             async swap(i: number, j: number) {
                 if (!instancedRef.current) return;
+                if (i === j) return;
 
                 const instanceI = instanceLinker[i];
                 const instanceJ = instanceLinker[j];
