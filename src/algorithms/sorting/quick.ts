@@ -8,8 +8,12 @@ export async function sort(arr: number[], callbacks: SortCallbacks) {
         const pivot = arr[high];
         let i = low - 1;
 
+        await callbacks.active(high);
+
         for (let j = low; j <= high - 1; j++) {
             await callbacks.iteration(j);
+            await callbacks.reset(j);
+
             if (arr[j] < pivot) {
                 i++;
                 await callbacks.swap(i, j);
@@ -19,6 +23,7 @@ export async function sort(arr: number[], callbacks: SortCallbacks) {
             }
         }
 
+        await callbacks.reset(high); // Reset the pivot highlight
         await callbacks.swap(i + 1, high);
         const temp = arr[i + 1];
         arr[i + 1] = arr[high];

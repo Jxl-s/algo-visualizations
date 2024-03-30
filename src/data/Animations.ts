@@ -6,6 +6,7 @@ export const CAMERA_OFFSET = [0, 12, 12];
 export const BOX_COLOR = "#dddddd";
 export const BOX_FOUND_COLOR = "#12ff12";
 export const BOX_SKIP_COLOR = "#ff1212";
+export const BOX_ACTIVE_COLOR = "#1212ff";
 export const BOX_CURRENT_COLOR = "#aaaaaa";
 
 // HTML Text Placement (has to be hardcoded)

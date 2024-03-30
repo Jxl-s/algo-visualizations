@@ -3,14 +3,18 @@ import * as THREE from "three";
 import gsap from "gsap";
 import useSortingStore from "../../stores/useSortingStore";
 import {
+    BOX_ACTIVE_COLOR,
     BOX_COLOR,
     BOX_CURRENT_COLOR,
     BOX_FOUND_COLOR,
     CAMERA_OFFSET,
     CAMERA_ROTATION,
+    TEXT_OFFSET,
+    TEXT_STEP,
 } from "../../data/Animations";
 import { useThree } from "@react-three/fiber";
 import * as SortingAlgorithms from "../../algorithms/sorting";
+import { Html } from "@react-three/drei";
 
 const boxMaterial = new THREE.MeshStandardMaterial({
     color: BOX_COLOR,
@@ -29,6 +33,7 @@ export default function Animation() {
         [numberList]
     );
 
+    const htmlRef = useRef<HTMLDivElement>(null);
     const sortAlgorithm = useSortingStore((state) => state.algorithm);
     const stepSpeed = useSortingStore((state) => state.stepSpeed);
 
@@ -145,9 +150,12 @@ export default function Animation() {
                     setColor(instanceLinker[index], BOX_COLOR);
                 }
             },
-            async swap(i: number, j: number) {
+            async swap(i: number, j: number, fast?: boolean) {
                 if (!instancedRef.current) return;
+                if (!htmlRef.current) return;
+
                 if (i === j) return;
+                const swapStepSpeed = fast ? stepSpeed * 0.1 : stepSpeed;
 
                 const instanceI = instanceLinker[i];
                 const instanceJ = instanceLinker[j];
@@ -164,9 +172,18 @@ export default function Animation() {
                 const next_i = matrixJ.elements[12];
                 const next_j = matrixI.elements[12];
 
+                const iSpan = htmlRef.current.children[i].getElementsByClassName("num-span")[0];
+                const jSpan = htmlRef.current.children[j].getElementsByClassName("num-span")[0];
+
+                const old_i = iSpan.textContent;
+                const old_j = jSpan.textContent;
+
+                iSpan.textContent = '';
+                jSpan.textContent = '';
+
                 // Make i move forward, and j backwards first
                 gsap.to(matrixI.elements, {
-                    duration: stepSpeed * 0.001 * 0.5,
+                    duration: swapStepSpeed * 0.001 * 0.5,
                     14: 1,
                     onUpdate: () => {
                         if (!instancedRef.current) return;
@@ -176,7 +193,7 @@ export default function Animation() {
                 });
 
                 gsap.to(matrixJ.elements, {
-                    duration: stepSpeed * 0.001 * 0.5,
+                    duration: swapStepSpeed * 0.001 * 0.5,
                     14: -1,
                     onUpdate: () => {
                         if (!instancedRef.current) return;
@@ -185,10 +202,10 @@ export default function Animation() {
                     },
                 });
 
-                await sleep(stepSpeed * 0.5);
+                await sleep(swapStepSpeed * 0.5);
 
                 gsap.to(matrixI.elements, {
-                    duration: stepSpeed * 0.001,
+                    duration: swapStepSpeed * 0.001,
                     12: next_i,
                     onUpdate: () => {
                         if (!instancedRef.current) return;
@@ -198,7 +215,7 @@ export default function Animation() {
                 });
 
                 gsap.to(matrixJ.elements, {
-                    duration: stepSpeed * 0.001,
+                    duration: swapStepSpeed * 0.001,
                     12: next_j,
                     onUpdate: () => {
                         if (!instancedRef.current) return;
@@ -207,10 +224,10 @@ export default function Animation() {
                     },
                 });
 
-                await sleep(stepSpeed);
+                await sleep(swapStepSpeed);
 
                 gsap.to(matrixI.elements, {
-                    duration: stepSpeed * 0.001 * 0.5,
+                    duration: swapStepSpeed * 0.001 * 0.5,
                     14: 0,
                     onUpdate: () => {
                         if (!instancedRef.current) return;
@@ -220,7 +237,7 @@ export default function Animation() {
                 });
 
                 gsap.to(matrixJ.elements, {
-                    duration: stepSpeed * 0.001 * 0.5,
+                    duration: swapStepSpeed * 0.001 * 0.5,
                     14: 0,
                     onUpdate: () => {
                         if (!instancedRef.current) return;
@@ -229,6 +246,8 @@ export default function Animation() {
                     },
                 });
 
+                iSpan.textContent = old_j;
+                jSpan.textContent = old_i;
                 instancedRef.current.instanceMatrix.needsUpdate = true;
             },
             async sorted(...i: number[]) {
@@ -240,11 +259,16 @@ export default function Animation() {
                 for (const index of i) {
                     setColor(instanceLinker[index], BOX_FOUND_COLOR);
                 }
-
-                await sleep(stepSpeed);
             },
-            async split(left: number[], right: number[]) {
-                console.log(left, right)
+            async active(...i: number[]) {
+                if (!useSortingStore.getState().showAnimation) {
+                    this.stop = true;
+                    return;
+                }
+
+                for (const index of i) {
+                    setColor(instanceLinker[index], BOX_ACTIVE_COLOR);
+                }
             },
             stop: false,
         };
@@ -264,6 +288,29 @@ export default function Animation() {
                 args={[boxGeometry, boxMaterial, numberListArray.length]}
                 ref={instancedRef}
             />
+            <Html
+                transform
+                rotation-x={-Math.PI / 2}
+                position={[0, 0, 1]}
+                className="w-full text-center"
+            >
+                <div ref={htmlRef}>
+                    {numberListArray.map((num, i) => (
+                        <div
+                            key={i}
+                            className="absolute"
+                            style={{
+                                left: i * TEXT_STEP + TEXT_OFFSET + "px",
+                                width: "40px",
+                            }}
+                        >
+                            <span className="num-span">{num}</span>
+                            <br />
+                            <span className="text-xs">({i})</span>
+                        </div>
+                    ))}
+                </div>
+            </Html>
         </>
     );
 }
