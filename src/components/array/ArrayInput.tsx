@@ -10,13 +10,15 @@ type ArrayInputEvent = {
 };
 
 interface Props {
+    showTarget: boolean;
+    value: string;
     onChange: (e: ArrayInputEvent) => void;
     disabled?: boolean;
 }
 
-export default function ArrayInput({ onChange, disabled }: Props) {
+export default function ArrayInput({ showTarget, value, onChange, disabled }: Props) {
     const [arrayInput, setArrayInput] = useState({
-        value: "",
+        value: value,
         error: "",
     });
 
@@ -93,30 +95,32 @@ export default function ArrayInput({ onChange, disabled }: Props) {
     return (
         <div className="col-span-3 lg:col-span-1 grid grid-cols-6 items-end gap-2">
             <Input
-                className="col-span-3"
+                className={`${showTarget ? "col-span-3" : "col-span-5"}`}
                 label="List"
                 placeholder="e.g. 1,2,3,4,5"
                 onChange={(v) => {
                     setArrayInput((s) => ({ ...s, value: v }));
                     onArrayChange(v);
                 }}
-                value={arrayInput.value}
+                value={value}
                 error={arrayInput.error}
                 disabled={disabled}
             />
-            <Input
-                className="col-span-2"
-                label="Target"
-                placeholder="e.g. 4"
-                type="number"
-                onChange={(v) => {
-                    setTargetInput((s) => ({ ...s, value: v }));
-                    onTargetChange(v);
-                }}
-                value={targetInput.value}
-                error={targetInput.error}
-                disabled={disabled}
-            />
+            {showTarget && (
+                <Input
+                    className="col-span-2"
+                    label="Target"
+                    placeholder="e.g. 4"
+                    type="number"
+                    onChange={(v) => {
+                        setTargetInput((s) => ({ ...s, value: v }));
+                        onTargetChange(v);
+                    }}
+                    value={targetInput.value}
+                    error={targetInput.error}
+                    disabled={disabled}
+                />
+            )}
             <div className="flex justify-center">
                 <Button
                     onClick={() =>

@@ -25,7 +25,7 @@ const boxMaterial = new THREE.MeshStandardMaterial({
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
-export default function InstancedAnimation() {
+export default function Animation() {
     const camera = useThree((state) => state.camera);
 
     const searchAlgorithm = useSearchingStore((state) => state.algorithm);
@@ -133,7 +133,7 @@ export default function InstancedAnimation() {
         camera.rotation.z = CAMERA_ROTATION[2];
 
         // Start animation
-        const animationCallbacks: Callbacks = {
+        const animationSearchCallbacks: SearchCallbacks = {
             async eliminate(range) {
                 if (!useSearchingStore.getState().showAnimation) {
                     this.stop = true;
@@ -160,7 +160,6 @@ export default function InstancedAnimation() {
                 });
             },
             async iteration(i) {
-                console.log(i);
                 if (!useSearchingStore.getState().showAnimation) {
                     this.stop = true;
                     return;
@@ -173,7 +172,6 @@ export default function InstancedAnimation() {
                     position: [i, CAMERA_OFFSET[1], CAMERA_OFFSET[2]],
                     duration: stepSpeed * 0.001,
                 });
-                await sleep(stepSpeed);
             },
             async reset(i) {
                 if (!useSearchingStore.getState().showAnimation) {
@@ -184,12 +182,12 @@ export default function InstancedAnimation() {
                 setColor(i, BOX_COLOR);
             },
             stop: false,
-        } as Callbacks;
+        } as SearchCallbacks;
 
         SearchingAlgorithms[searchAlgorithm].search(
             numberListArray,
             numberTarget,
-            animationCallbacks
+            animationSearchCallbacks
         );
     }, [camera, numberListArray, numberTarget, searchAlgorithm, stepSpeed]);
 

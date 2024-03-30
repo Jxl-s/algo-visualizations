@@ -7,7 +7,7 @@ async function binarySearch(
     left: number,
     right: number,
     x: number,
-    callbacks: Callbacks
+    callbacks: SearchCallbacks
 ) {
     while (left <= right) {
         if (callbacks.stop) return;
@@ -40,7 +40,7 @@ async function binarySearch(
 export async function search(
     arr: number[],
     target: number,
-    callbacks: Callbacks
+    callbacks: SearchCallbacks
 ) {
     const n = arr.length;
 

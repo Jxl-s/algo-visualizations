@@ -5,7 +5,7 @@ export const SORT = false;
 export async function search(
     arr: number[],
     target: number,
-    callbacks: Callbacks
+    callbacks: SearchCallbacks
 ) {
     for (let i = 0; i < arr.length; i++) {
         if (callbacks.stop) return;

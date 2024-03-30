@@ -5,7 +5,7 @@ export const SORT = true;
 export async function search(
     arr: number[],
     target: number,
-    callbacks: Callbacks
+    callbacks: SearchCallbacks
 ) {
     const n = arr.length;
     const jumpSize = Math.floor(Math.sqrt(n));

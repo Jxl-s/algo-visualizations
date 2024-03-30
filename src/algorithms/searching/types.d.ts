@@ -1,4 +1,4 @@
-interface Callbacks {
+interface SearchCallbacks {
     iteration: (i: number, other?: number[]) => Promise<void>;
     found: (i: number) => Promise<void>;
     eliminate: (range: number[]) => Promise<void>;

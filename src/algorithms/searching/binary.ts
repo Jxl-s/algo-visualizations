@@ -5,7 +5,7 @@ export const SORT = true;
 export async function search(
     arr: number[],
     target: number,
-    callbacks: Callbacks
+    callbacks: SearchCallbacks
 ) {
     let low = 0;
     let high = arr.length - 1;

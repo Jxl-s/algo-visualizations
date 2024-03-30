@@ -5,7 +5,7 @@ export const SORT = false;
 export async function search(
     arr: number[],
     target: number,
-    callbacks: Callbacks
+    callbacks: SearchCallbacks
 ) {
     while (!callbacks.stop) {
         const i = Math.floor(Math.random() * arr.length);

@@ -1,6 +1,6 @@
 // When looking down at the scene, camera will be tweaked
 export const CAMERA_ROTATION = [-Math.PI / 4, 0, 0];
-export const CAMERA_OFFSET = [0, 8, 6];
+export const CAMERA_OFFSET = [0, 12, 12];
 
 // Box colors
 export const BOX_COLOR = "#dddddd";
