@@ -127,18 +127,20 @@ export default function Animation() {
 
         // Start animation
         const animationSortCallbacks: SortCallbacks = {
-            async iteration(i: number) {
+            async iteration(i: number, noCameraMove?: boolean) {
                 if (!useSortingStore.getState().showAnimation) {
                     this.stop = true;
                     return;
                 }
 
                 setColor(instanceLinker[i], BOX_CURRENT_COLOR);
-                await moveCamera({
-                    camera,
-                    position: [i, CAMERA_OFFSET[1], CAMERA_OFFSET[2]],
-                    duration: stepSpeed * 0.001,
-                });
+                if (!noCameraMove) {
+                    await moveCamera({
+                        camera,
+                        position: [i, CAMERA_OFFSET[1], CAMERA_OFFSET[2]],
+                        duration: stepSpeed * 0.001,
+                    });
+                }
             },
             async reset(...i: number[]) {
                 if (!useSortingStore.getState().showAnimation) {
@@ -264,8 +266,15 @@ export default function Animation() {
 
                 for (let i = 0; i < items.length; i++) {
                     if (!instancedRef.current) return;
+                    if (!htmlRef.current) return;
+
                     const realI = i + min;
                     const realJ = items[i];
+
+                    const iSpan =
+                        htmlRef.current.children[realI].getElementsByClassName(
+                            "num-span"
+                        )[0];
 
                     // item at j should be at i
                     const jMatrix = new THREE.Matrix4();
@@ -287,13 +296,12 @@ export default function Animation() {
                                 true;
                         },
                     });
-                    // jMatrix.elements[12] = realI;
-                    // instancedRef.current.setMatrixAt(
-                    //     instanceLinker[realJ],
-                    //     jMatrix
-                    // );
-                    // instancedRef.current.instanceMatrix.needsUpdate = true;
+
+                    instancedRef.current.instanceMatrix.needsUpdate = true;
+                    iSpan.textContent = numberListArray[realJ].toString();
                 }
+
+                await sleep(stepSpeed);
             },
             async sorted(...i: number[]) {
                 if (!useSortingStore.getState().showAnimation) {
@@ -319,7 +327,7 @@ export default function Animation() {
         };
 
         SortingAlgorithms[sortAlgorithm].sort(
-            numberListArray,
+            [...numberListArray],
             animationSortCallbacks
         );
     }, [camera, numberListArray, sortAlgorithm, stepSpeed, instanceLinker]);

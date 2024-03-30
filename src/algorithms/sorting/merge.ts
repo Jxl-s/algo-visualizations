@@ -16,8 +16,8 @@ async function merge(
     let rightIndex = 0;
 
     while (leftIndex < left.length && rightIndex < right.length) {
+        await callbacks.iteration(right[rightIndex].index, true);
         await callbacks.iteration(left[leftIndex].index);
-        await callbacks.iteration(right[rightIndex].index);
 
         await callbacks.reset(left[leftIndex].index);
         await callbacks.reset(right[rightIndex].index);
@@ -93,6 +93,10 @@ export async function sort(
     const sortedArr = sortedArrWithIndexes.map((item) => item.value);
     // const reorder = sortedArrWithIndexes.map((item) => item.index);
     // await callbacks.reorder(0, ...reorder);
+
+    for (let i = 0; i < sortedArr.length; i++) {
+        await callbacks.sorted(i);
+    }
 
     return sortedArr;
 }
