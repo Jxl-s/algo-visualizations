@@ -4,5 +4,6 @@ interface SortCallbacks {
     swap: (i: number, j: number, fast?: boolean) => Promise<void>;
     sorted: (...i: number[]) => Promise<void>;
     active: (...i: number[]) => Promise<void>;
+    reorder: (min: number, ...i: number[]) => Promise<void>;
     stop?: boolean;
 }

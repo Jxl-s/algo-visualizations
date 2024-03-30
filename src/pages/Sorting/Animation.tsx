@@ -172,14 +172,20 @@ export default function Animation() {
                 const next_i = matrixJ.elements[12];
                 const next_j = matrixI.elements[12];
 
-                const iSpan = htmlRef.current.children[i].getElementsByClassName("num-span")[0];
-                const jSpan = htmlRef.current.children[j].getElementsByClassName("num-span")[0];
+                const iSpan =
+                    htmlRef.current.children[i].getElementsByClassName(
+                        "num-span"
+                    )[0];
+                const jSpan =
+                    htmlRef.current.children[j].getElementsByClassName(
+                        "num-span"
+                    )[0];
 
                 const old_i = iSpan.textContent;
                 const old_j = jSpan.textContent;
 
-                iSpan.textContent = '';
-                jSpan.textContent = '';
+                iSpan.textContent = "";
+                jSpan.textContent = "";
 
                 // Make i move forward, and j backwards first
                 gsap.to(matrixI.elements, {
@@ -249,6 +255,45 @@ export default function Animation() {
                 iSpan.textContent = old_j;
                 jSpan.textContent = old_i;
                 instancedRef.current.instanceMatrix.needsUpdate = true;
+            },
+            async reorder(min: number, ...items: number[]) {
+                if (!useSortingStore.getState().showAnimation) {
+                    this.stop = true;
+                    return;
+                }
+
+                for (let i = 0; i < items.length; i++) {
+                    if (!instancedRef.current) return;
+                    const realI = i + min;
+                    const realJ = items[i];
+
+                    // item at j should be at i
+                    const jMatrix = new THREE.Matrix4();
+                    instancedRef.current.getMatrixAt(
+                        instanceLinker[realJ],
+                        jMatrix
+                    );
+
+                    gsap.to(jMatrix.elements, {
+                        duration: stepSpeed * 0.001,
+                        12: realI,
+                        onUpdate: () => {
+                            if (!instancedRef.current) return;
+                            instancedRef.current.setMatrixAt(
+                                instanceLinker[realJ],
+                                jMatrix
+                            );
+                            instancedRef.current.instanceMatrix.needsUpdate =
+                                true;
+                        },
+                    });
+                    // jMatrix.elements[12] = realI;
+                    // instancedRef.current.setMatrixAt(
+                    //     instanceLinker[realJ],
+                    //     jMatrix
+                    // );
+                    // instancedRef.current.instanceMatrix.needsUpdate = true;
+                }
             },
             async sorted(...i: number[]) {
                 if (!useSortingStore.getState().showAnimation) {
